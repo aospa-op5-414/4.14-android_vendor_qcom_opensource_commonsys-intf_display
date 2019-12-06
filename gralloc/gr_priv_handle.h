@@ -119,9 +119,11 @@ struct private_handle_t {
   int unaligned_height;  // holds height client asked to allocate
   int format;
   int buffer_type;
+#ifndef USE_GRALLOC1
   unsigned int layer_count;
   uint64_t id;
   uint64_t usage;
+#endif
 
   unsigned int size;
   unsigned int offset;
@@ -131,6 +133,11 @@ struct private_handle_t {
   uint64_t gpuaddr;
 #ifndef GRALLOC_HANDLE_HAS_NO_RESERVED_SIZE
   unsigned int reserved_size;
+#endif
+#ifdef USE_GRALLOC1
+  unsigned int layer_count;
+  uint64_t id;
+  uint64_t usage;
 #endif
 #ifdef __cplusplus
   static const int kNumFds = 2;
@@ -152,19 +159,28 @@ struct private_handle_t {
         unaligned_height(uh),
         format(format),
         buffer_type(buf_type),
+#ifndef USE_GRALLOC1
         layer_count(1),
         id(0),
         usage(usage),
+#endif
         size(size),
         offset(0),
         offset_metadata(0),
         base(0),
         base_metadata(0),
-        gpuaddr(0)
+
 #ifndef GRALLOC_HANDLE_HAS_NO_RESERVED_SIZE
-        ,reserved_size(0)
+        ,reserved_size(0);
 #endif
-  {
+#ifdef USE_GRALLOC1
+        gpuaddr(0),
+        layer_count(1),
+        id(0),
+        usage(usage) {
+#else
+        gpuaddr(0) {
+#endif
     version = static_cast<int>(sizeof(native_handle));
     numInts = NumInts();
     numFds = kNumFds;
