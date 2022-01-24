@@ -1,6 +1,6 @@
 bootstrap_go_package {
     name: "soong-gralloc_defaults",
-    pkgPath: "vendor/qcom/opensource/display-commonsys-intf",
+    pkgPath: "vendor/qcom/opensource/commonsys-intf/display",
     deps: [
         "blueprint",
         "blueprint-pathtools",
